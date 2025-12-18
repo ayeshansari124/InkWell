@@ -5,9 +5,15 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const User = require('./models/User');
+const Post = require('./models/Post');
 const bcrypt = require('bcrypt');
 const cookieParser = require('cookie-parser');
 const requireAuth = require('./middleware/requireAuth');
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
+const fs= require('fs');
+app.use('/uploads', express.static(__dirname + '/uploads'));
+
 app.use(cookieParser());
 app.use(cors({
   origin: 'http://localhost:5173',
@@ -63,7 +69,7 @@ app.post('/login', async (req, res) => {
     
     if(isMatch) {
         //logged in
-        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
         res.cookie('token', token, {
   httpOnly: true,
   sameSite: 'lax',
@@ -102,6 +108,76 @@ app.post('/logout', (req, res) => {
     .json({ message: 'Logged out' });
 });
 
+app.post('/post', upload.single('file'), async (req, res) => {
+  const {originalname, path} = req.file;
+  const parts= originalname.split('.');
+  const ext= parts[parts.length -1];
+  const newPath= path + '.' + ext;
+  const fs= require('fs');
+  fs.renameSync(path, newPath);
+
+  const token= req.cookies.token;
+  jwt.verify(token, process.env.JWT_SECRET, {}, async (err, info) => {
+    if (err) throw err;
+    req.userId= info.userId;
+  const {title, summary, content} = req.body;
+  const postDoc = await Post.create({
+  title,
+  summary,
+  content,
+  cover: newPath,
+  author: req.userId, 
+});
+  })
+res.json("ok");
+}); 
+
+app.get('/post', async (req, res) => {
+  res.json( await Post.find().populate('author').sort({createdAt: -1}) );
+});
+
+app.get('/post/:id', async (req, res) => {
+  const {id} = req.params;
+  const postDoc = await Post.findById(id).populate('author',['name', 'email']);
+  res.json(postDoc);
+});
+
+app.put('/post/:id', requireAuth, upload.single('file'), async (req, res) => {
+  const post = await Post.findById(req.params.id);
+
+  //not author
+  if (post.author.toString() !== req.userId) {
+    return res.status(403).json({ error: "Not allowed" });
+  }
+
+  let newCover = post.cover;
+
+  if (req.file) {
+    const { originalname, path } = req.file;
+    const ext = originalname.split('.').pop();
+    newCover = path + '.' + ext;
+    fs.renameSync(path, newCover);
+  }
+
+  post.title = req.body.title;
+  post.summary = req.body.summary;
+  post.content = req.body.content;
+  post.cover = newCover;
+
+  await post.save();
+  res.json({ message: "Post updated" });
+});
+
+app.delete('/post/:id', requireAuth, async (req, res) => {
+  const post = await Post.findById(req.params.id);
+
+  if (post.author.toString() !== req.userId) {
+    return res.status(403).json({ error: "Not allowed" });
+  }
+
+  await post.deleteOne();
+  res.json({ message: "Post deleted" });
+});
 
 app.listen(4000, () => {
   console.log('API server running on http://localhost:4000');

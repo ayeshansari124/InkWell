@@ -1,35 +1,39 @@
-import React from "react";
+import { Link } from "react-router-dom";
 
-const Post = () => {
+const Post = ({ title, summary, cover, author, createdAt, _id }) => {
   return (
     <div className="flex gap-6 py-6 border-b border-gray-200 min-h-[160px] w-full">
       
-      {/* IMAGE */}
+      <Link to={`/post/${_id}`}>
       <img
-        src="https://images.unsplash.com/photo-1509395176047-4a66953fd231?q=80&w=600"
-        alt="post"
+        src={"http://localhost:4000/" + cover}
+        alt={title}
         className="w-80 h-48 object-cover rounded-md flex-shrink-0"
       />
+      </Link>
+      
 
       {/* CONTENT */}
       <div className="flex flex-col gap-2">
-        
+
+        <Link to={`/post/${_id}`}>
         <h2 className="text-2xl font-bold leading-snug">
-          Full-house battery backup coming later this year
+          {title}
         </h2>
 
-        <span className="text-lg text-gray-500 font-semibold">
-          David Pasko · Oct 16, 2023
+        </Link>
+        
+        {/* AUTHOR + DATE */}
+        <span className="text-sm text-gray-500">
+          <span className="font-medium text-gray-700">
+            {author?.name || "Unknown Author"}
+          </span>
+          {" · "}
+          <time> {new Date(createdAt).toLocaleDateString()}</time>
         </span>
 
         <p className="text-sm text-gray-700 leading-relaxed">
-          EcoFlow announced several new power products during its latest launch
-          event, including a comprehensive whole-home battery backup solution
-          designed for modern households. The system aims to provide uninterrupted
-          power during outages, improve energy efficiency, and integrate seamlessly
-          with existing solar setups for long-term sustainability and cost savings.
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi, veritatis itaque ipsum ipsa laboriosam asperiores.
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Corporis quidem repellendus repudiandae ut minus doloribus quis delectus porro reprehenderit quisquam!
+          {summary}
         </p>
 
       </div>
