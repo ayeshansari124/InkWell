@@ -2,6 +2,7 @@ import { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import Post from "../components/Post";
 import { UserContext } from "../context/UserContext";
+import { Link } from "react-router-dom";
 
 const AuthorPage = () => {
   const { id } = useParams();
@@ -54,11 +55,20 @@ const AuthorPage = () => {
           <p className="text-gray-600 mt-1">
             {author.bio || "No bio yet."}
           </p>
-
+          
           <div className="flex gap-6 mt-3 text-sm text-gray-500">
             <span>{posts.length} posts</span>
             <span>{followers} followers</span>
           </div>
+          {user && user._id === id && (
+  <Link
+    to="/profile/edit"
+    className="text-sm border px-4 py-1 rounded-full"
+  >
+    Edit Profile
+  </Link>
+)}
+
         </div>
 
         {user && user._id !== id && (

@@ -223,6 +223,45 @@ app.get("/author/:id", async (req, res) => {
   res.json({ user, postCount });
 });
 
+app.put(
+  "/profile",
+  requireAuth,
+  upload.single("avatar"),
+  async (req, res) => {
+    const user = await User.findById(req.userId);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // BIO
+    if (req.body.bio !== undefined) {
+      user.bio = req.body.bio;
+    }
+
+    // AVATAR
+    if (req.file) {
+      const { originalname, path } = req.file;
+      const ext = originalname.split(".").pop();
+      const newPath = path + "." + ext;
+      fs.renameSync(path, newPath);
+      user.avatar = newPath;
+    }
+
+    await user.save();
+
+    res.json({
+      message: "Profile updated",
+      user: {
+        _id: user._id,
+        name: user.name,
+        bio: user.bio,
+        avatar: user.avatar,
+      },
+    });
+  }
+);
+
 app.listen(4000, () => {
   console.log('API server running on http://localhost:4000');
 });
