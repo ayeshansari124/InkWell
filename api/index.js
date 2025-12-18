@@ -179,6 +179,50 @@ app.delete('/post/:id', requireAuth, async (req, res) => {
   res.json({ message: "Post deleted" });
 });
 
+app.get("/search", async (req, res) => {
+  const { q } = req.query;
+
+  if (!q) {
+    return res.json([]);
+  }
+
+  const users = await User.find({
+    name: { $regex: q, $options: "i" }, // case-insensitive
+  }).select("name _id");
+
+  res.json(users);
+});
+
+app.get("/author/:id/posts", async (req, res) => {
+  const posts = await Post.find({ author: req.params.id })
+    .populate("author", ["name"])
+    .sort({ createdAt: -1 });
+
+  res.json(posts);
+});
+
+app.post("/author/:id/follow", requireAuth, async (req, res) => {
+  const author = await User.findById(req.params.id);
+
+  if (author.followers.includes(req.userId)) {
+    author.followers.pull(req.userId);
+  } else {
+    author.followers.push(req.userId);
+  }
+
+  await author.save();
+  res.json({ followers: author.followers.length });
+});
+
+app.get("/author/:id", async (req, res) => {
+  const user = await User.findById(req.params.id)
+    .select("name avatar bio followers");
+
+  const postCount = await Post.countDocuments({ author: user._id });
+
+  res.json({ user, postCount });
+});
+
 app.listen(4000, () => {
   console.log('API server running on http://localhost:4000');
 });
