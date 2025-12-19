@@ -45,9 +45,25 @@ app.post('/register', async (req, res) => {
 
     const user = await User.create({ name, email, password });
 
+    // 🔥 AUTO LOGIN
+    const token = jwt.sign(
+      { userId: user._id },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+
+    res.cookie('token', token, {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: false,
+    });
+
     res.status(201).json({
-      message: 'User registered successfully',
-      userId: user._id,
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+      },
     });
 
   } catch (err) {
@@ -55,6 +71,7 @@ app.post('/register', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
 
 app.post('/login', async (req, res) => {
   try {
@@ -267,6 +284,29 @@ app.put(
     });
   }
 );
+
+app.post("/author/:id/follow", requireAuth, async (req, res) => {
+  const author = await User.findById(req.params.id);
+
+  if (!author) {
+    return res.status(404).json({ error: "Author not found" });
+  }
+
+  const isFollowing = author.followers.includes(req.userId);
+
+  if (isFollowing) {
+    author.followers.pull(req.userId);
+  } else {
+    author.followers.push(req.userId);
+  }
+
+  await author.save();
+
+  res.json({
+    followers: author.followers.length,
+    following: !isFollowing,
+  });
+});
 
 app.listen(4000, () => {
   console.log('API server running on http://localhost:4000');

@@ -46,9 +46,13 @@ const PostPage = () => {
           </h1>
 
           <div className="flex items-center gap-2 text-sm text-gray-500">
-            <span className="font-medium text-gray-700">
-              {postInfo.author?.name || "Unknown Author"}
-            </span>
+           <Link
+  to={`/author/${postInfo.author?._id}`}
+  className="font-medium text-gray-700 hover:underline"
+>
+  {postInfo.author?.name}
+</Link>
+
             <span>·</span>
             <time>
               {new Date(postInfo.createdAt).toDateString()}

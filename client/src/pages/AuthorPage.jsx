@@ -11,6 +11,7 @@ const AuthorPage = () => {
   const [author, setAuthor] = useState(null);
   const [posts, setPosts] = useState([]);
   const [followerCount, setFollowerCount] = useState(0);
+  const [isFollowing, setIsFollowing] = useState(false);
 
 
   useEffect(() => {
@@ -19,22 +20,32 @@ const AuthorPage = () => {
       .then(data => {
   setAuthor(data.user);
   setFollowerCount(data.followerCount);
+  setIsFollowing(
+    data.user.followers?.includes(user?._id)
+  );
 });
-
 
     fetch(`http://localhost:4000/author/${id}/posts`)
       .then(res => res.json())
       .then(data => setPosts(data));
   }, [id]);
 
- const toggleFollow = async () => {
+const toggleFollow = async () => {
   const res = await fetch(
     `http://localhost:4000/author/${id}/follow`,
-    { method: "POST", credentials: "include" }
+    {
+      method: "POST",
+      credentials: "include",
+    }
   );
+
+  if (!res.ok) return;
+
   const data = await res.json();
   setFollowerCount(data.followers);
+  setIsFollowing(data.following);
 };
+
 
 
   if (!author) return null;
@@ -106,19 +117,13 @@ const AuthorPage = () => {
 </Link>
 
       ) : (
-        <button
-          onClick={toggleFollow}
-          className="
-            inline-flex items-center
-            px-6 py-2 rounded-full
-            bg-black text-white
-            text-sm font-medium
-            hover:opacity-90
-            transition
-          "
-        >
-          Follow
-        </button>
+       <button
+  onClick={toggleFollow}
+  className="bg-black text-white px-6 py-2 rounded-lg hover:bg-black/90 transition"
+>
+  {isFollowing ? "Unfollow" : "Follow"}
+</button>
+
       )}
     </div>
   </div>

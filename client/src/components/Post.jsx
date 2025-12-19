@@ -40,9 +40,13 @@ const Post = ({ title, summary, cover, author, createdAt, _id }) => {
 
             {/* META */}
             <div className="text-sm text-gray-500">
-              <span className="font-medium text-gray-700">
-                {author?.name || "Unknown Author"}
-              </span>
+              <Link
+  to={`/author/${author?._id}`}
+  className="font-medium text-gray-700 hover:underline"
+>
+  {author?.name}
+</Link>
+
               {" · "}
               <time>{new Date(createdAt).toLocaleDateString()}</time>
             </div>
