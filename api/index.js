@@ -133,7 +133,12 @@ res.json("ok");
 }); 
 
 app.get('/post', async (req, res) => {
-  res.json( await Post.find().populate('author').sort({createdAt: -1}) );
+  const posts = await Post.find()
+    .populate('author', ['name'])
+    .sort({ createdAt: -1 })
+    .limit(10);   
+
+  res.json(posts);
 });
 
 app.get('/post/:id', async (req, res) => {
@@ -201,18 +206,19 @@ app.get("/author/:id/posts", async (req, res) => {
   res.json(posts);
 });
 
-app.post("/author/:id/follow", requireAuth, async (req, res) => {
-  const author = await User.findById(req.params.id);
+app.get("/author/:id", async (req, res) => {
+  const user = await User.findById(req.params.id)
+    .select("name avatar bio followers");
 
-  if (author.followers.includes(req.userId)) {
-    author.followers.pull(req.userId);
-  } else {
-    author.followers.push(req.userId);
-  }
+  const postCount = await Post.countDocuments({ author: user._id });
 
-  await author.save();
-  res.json({ followers: author.followers.length });
+  res.json({
+    user,
+    postCount,
+    followerCount: user.followers.length,
+  });
 });
+
 
 app.get("/author/:id", async (req, res) => {
   const user = await User.findById(req.params.id)

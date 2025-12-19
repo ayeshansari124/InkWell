@@ -1,6 +1,7 @@
 import { useEffect, useState, useContext } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
+import { Pencil, Trash2 } from "lucide-react";
 
 const PostPage = () => {
   const [postInfo, setPostInfo] = useState(null);
@@ -36,61 +37,81 @@ const PostPage = () => {
 
   return (
     <article className="max-w-4xl mx-auto px-6 py-10">
-      
-      {/* TITLE */}
-      <h1 className="text-4xl font-bold leading-tight mb-4">
-        {postInfo.title}
-      </h1>
 
-      {/* META */}
-      <div className="flex items-center gap-2 text-sm text-gray-500 mb-6">
-        <span className="font-medium text-gray-700">
-          {postInfo.author?.name || "Unknown Author"}
-        </span>
-        <span>·</span>
-        <time>
-          {new Date(postInfo.createdAt).toDateString()}
-        </time>
+      {/* HEADER */}
+      <div className="flex items-start justify-between gap-6 mb-6">
+        <div>
+          <h1 className="text-4xl font-bold leading-tight mb-3">
+            {postInfo.title}
+          </h1>
+
+          <div className="flex items-center gap-2 text-sm text-gray-500">
+            <span className="font-medium text-gray-700">
+              {postInfo.author?.name || "Unknown Author"}
+            </span>
+            <span>·</span>
+            <time>
+              {new Date(postInfo.createdAt).toDateString()}
+            </time>
+          </div>
+        </div>
+
+        {/* ICON ACTIONS (AUTHOR ONLY) */}
+        {user && user._id === postInfo.author?._id && (
+          <div className="flex gap-2">
+            <Link
+              to={`/edit/${postInfo._id}`}
+              title="Edit post"
+              className="p-2 rounded-lg hover:bg-gray-100 transition"
+            >
+              <Pencil size={18} />
+            </Link>
+
+            <button
+              onClick={handleDelete}
+              title="Delete post"
+              className="p-2 rounded-lg hover:bg-red-50 text-red-600 transition"
+            >
+              <Trash2 size={18} />
+            </button>
+          </div>
+        )}
       </div>
 
-      {/* EDIT / DELETE (AUTHOR ONLY) */}
-      {user && user._id === postInfo.author?._id && (
-        <div className="flex gap-4 mb-6">
-          <Link
-            to={`/edit/${postInfo._id}`}
-            className="text-sm bg-black text-white px-4 py-1 rounded"
-          >
-            Edit
-          </Link>
-
-          <button
-            onClick={handleDelete}
-            className="text-sm bg-red-600 text-white px-4 py-1 rounded"
-          >
-            Delete
-          </button>
-        </div>
-      )}
-
       {/* COVER IMAGE */}
-      <div className="mb-8">
+      <div className="mb-10">
         <img
           src={`http://localhost:4000/${postInfo.cover}`}
           alt={postInfo.title}
-          className="w-full max-h-[420px] object-cover rounded-xl"
+          className="w-full max-h-[420px] object-cover rounded-2xl"
         />
       </div>
 
       {/* SUMMARY */}
-      <p className="text-lg text-gray-600 mb-8 leading-relaxed">
-        {postInfo.summary}
-      </p>
+      <section className="mb-10">
+        <h2 className="text-sm font-semibold text-gray-500 uppercase mb-3">
+          Summary
+        </h2>
+
+        <div className="bg-gray-50 border-l-4 border-black p-5 rounded-lg">
+          <p className="text-lg font-medium text-gray-800 leading-relaxed">
+            {postInfo.summary}
+          </p>
+        </div>
+      </section>
 
       {/* CONTENT */}
-      <div
-        className="prose prose-lg max-w-none"
-        dangerouslySetInnerHTML={{ __html: postInfo.content }}
-      />
+      <section>
+        <h2 className="text-sm font-semibold text-gray-500 uppercase mb-4">
+          Content
+        </h2>
+
+        <div
+          className="prose prose-lg max-w-none"
+          dangerouslySetInnerHTML={{ __html: postInfo.content }}
+        />
+      </section>
+
     </article>
   );
 };

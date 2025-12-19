@@ -10,76 +10,121 @@ const AuthorPage = () => {
 
   const [author, setAuthor] = useState(null);
   const [posts, setPosts] = useState([]);
-  const [followers, setFollowers] = useState(0);
+  const [followerCount, setFollowerCount] = useState(0);
+
 
   useEffect(() => {
     fetch(`http://localhost:4000/author/${id}`)
       .then(res => res.json())
       .then(data => {
-        setAuthor(data.user);
-        setFollowers(data.postCount);
-      });
+  setAuthor(data.user);
+  setFollowerCount(data.followerCount);
+});
+
 
     fetch(`http://localhost:4000/author/${id}/posts`)
       .then(res => res.json())
       .then(data => setPosts(data));
   }, [id]);
 
-  const toggleFollow = async () => {
-    const res = await fetch(
-      `http://localhost:4000/author/${id}/follow`,
-      { method: "POST", credentials: "include" }
-    );
-    const data = await res.json();
-    setFollowers(data.followers);
-  };
+ const toggleFollow = async () => {
+  const res = await fetch(
+    `http://localhost:4000/author/${id}/follow`,
+    { method: "POST", credentials: "include" }
+  );
+  const data = await res.json();
+  setFollowerCount(data.followers);
+};
+
 
   if (!author) return null;
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-10 space-y-8">
       
-      {/* AUTHOR HEADER */}
-      <div className="flex gap-6 items-center border-b pb-6">
-        <img
-          src={
-            author.avatar
-              ? `http://localhost:4000/${author.avatar}`
-              : "https://ui-avatars.com/api/?name=" + author.name
-          }
-          className="w-24 h-24 rounded-full object-cover"
-        />
+     {/* AUTHOR PROFILE CARD */}
+<div className="relative bg-white border border-gray-200 rounded-2xl p-8 shadow-sm">
+  
+  {/* TOP ROW */}
+  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
+    
+    {/* AVATAR */}
+    <img
+      src={
+        author.avatar
+          ? `http://localhost:4000/${author.avatar}`
+          : `https://ui-avatars.com/api/?name=${encodeURIComponent(
+              author.name
+            )}&background=000000&color=ffffff`
+      }
+      className="w-28 h-28 rounded-full object-cover border"
+    />
 
-        <div className="flex-1">
-          <h1 className="text-3xl font-bold">{author.name}</h1>
-          <p className="text-gray-600 mt-1">
-            {author.bio || "No bio yet."}
-          </p>
-          
-          <div className="flex gap-6 mt-3 text-sm text-gray-500">
-            <span>{posts.length} posts</span>
-            <span>{followers} followers</span>
-          </div>
-          {user && user._id === id && (
-  <Link
-    to="/profile/edit"
-    className="text-sm border px-4 py-1 rounded-full"
-  >
-    Edit Profile
-  </Link>
-)}
+    {/* MAIN INFO */}
+    <div className="flex-1 space-y-3">
+      <h1 className="text-4xl font-bold tracking-tight">
+        {author.name}
+      </h1>
 
+      <p className="text-gray-600 max-w-xl leading-relaxed">
+        {author.bio || "This author hasn’t written a bio yet."}
+      </p>
+
+      {/* STATS */}
+      <div className="flex gap-8 text-sm pt-2">
+        <div>
+          <span className="font-semibold text-gray-900">
+            {posts.length}
+          </span>{" "}
+          <span className="text-gray-500">Posts</span>
         </div>
-
-        {user && user._id !== id && (
-          <button
-            onClick={toggleFollow}
-            className="bg-black text-white px-5 py-2 rounded-full"
-          >
-            Follow
-          </button>
-        )}
+        <div>
+          <span className="font-semibold text-gray-900">
+            {followerCount}
+          </span>{" "}
+          <span className="text-gray-500">Followers</span>
+        </div>
       </div>
+    </div>
+
+    {/* ACTION */}
+    <div className="pt-2 sm:pt-0">
+      {user && user._id === id ? (
+        <Link
+  to="/profile/edit"
+  className="
+  bg-black text-white
+  px-5 py-3
+  rounded-lg
+  text-base font-medium
+  hover:bg-black/90
+  transition
+"
+
+>
+  Edit Profile
+</Link>
+
+      ) : (
+        <button
+          onClick={toggleFollow}
+          className="
+            inline-flex items-center
+            px-6 py-2 rounded-full
+            bg-black text-white
+            text-sm font-medium
+            hover:opacity-90
+            transition
+          "
+        >
+          Follow
+        </button>
+      )}
+    </div>
+  </div>
+</div>
+
+
 
       {/* POSTS */}
       <div className="space-y-6">
