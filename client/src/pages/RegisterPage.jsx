@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const RegisterPage = () => {
   const [name, setName] = useState("");
@@ -12,66 +12,125 @@ const RegisterPage = () => {
 
     const res = await fetch("http://localhost:4000/register", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       credentials: "include",
-      body: JSON.stringify({
-        name,      // ✅ MUST be called "name"
-        email,
-        password,
-      }),
+      body: JSON.stringify({ name, email, password }),
     });
 
     if (!res.ok) {
-      const err = await res.json();
-      console.error(err);
+      console.error("Registration failed");
       return;
     }
 
-    // 🔥 auto-login already done by backend
     navigate("/");
   };
 
   return (
-    <div className="max-w-md mx-auto mt-20 p-8 border rounded-xl">
-      <h1 className="text-2xl font-bold mb-6">Create an account</h1>
+    <div className="min-h-[calc(100vh-80px)] flex items-center justify-center px-4">
+      <div className="w-full max-w-md bg-white border border-gray-200 rounded-2xl p-8 shadow-sm">
+        
+        {/* HEADER */}
+        <div className="mb-8 text-center">
+          <h1 className="text-2xl font-bold mb-2">
+            Create your account
+          </h1>
+          <p className="text-sm text-gray-500">
+            Join the community and start publishing
+          </p>
+        </div>
 
-      <form onSubmit={handleRegister} className="space-y-4">
-        <input
-          type="text"
-          placeholder="Full Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="w-full border px-4 py-2 rounded-lg"
-          required
-        />
+        {/* FORM */}
+        <form onSubmit={handleRegister} className="space-y-5">
+          <div>
+            <label className="block text-sm font-medium mb-1">
+              Full Name
+            </label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="
+                w-full
+                border border-gray-300
+                rounded-lg
+                px-4 py-2.5
+                text-sm
+                focus:outline-none
+                focus:ring-1 focus:ring-black
+              "
+              required
+            />
+          </div>
 
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="w-full border px-4 py-2 rounded-lg"
-          required
-        />
+          <div>
+            <label className="block text-sm font-medium mb-1">
+              Email
+            </label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="
+                w-full
+                border border-gray-300
+                rounded-lg
+                px-4 py-2.5
+                text-sm
+                focus:outline-none
+                focus:ring-1 focus:ring-black
+              "
+              required
+            />
+          </div>
 
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="w-full border px-4 py-2 rounded-lg"
-          required
-        />
+          <div>
+            <label className="block text-sm font-medium mb-1">
+              Password
+            </label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="
+                w-full
+                border border-gray-300
+                rounded-lg
+                px-4 py-2.5
+                text-sm
+                focus:outline-none
+                focus:ring-1 focus:ring-black
+              "
+              required
+            />
+          </div>
 
-        <button
-          type="submit"
-          className="bg-black text-white w-full py-2 rounded-lg hover:bg-black/90"
-        >
-          Register
-        </button>
-      </form>
+          <button
+            type="submit"
+            className="
+              w-full
+              bg-black text-white
+              py-2.5
+              rounded-lg
+              font-medium
+              hover:bg-black/90
+              transition
+            "
+          >
+            Create Account
+          </button>
+        </form>
+
+        {/* FOOTER */}
+        <p className="text-sm text-gray-500 text-center mt-6">
+          Already have an account?{" "}
+          <Link
+            to="/login"
+            className="text-black font-medium hover:underline"
+          >
+            Login
+          </Link>
+        </p>
+      </div>
     </div>
   );
 };

@@ -51,94 +51,103 @@ const toggleFollow = async () => {
   if (!author) return null;
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-10 space-y-8">
-      
-     {/* AUTHOR PROFILE CARD */}
-<div className="relative bg-white border border-gray-200 rounded-2xl p-8 shadow-sm">
-  
-  {/* TOP ROW */}
-  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
+  <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 space-y-10">
     
-    {/* AVATAR */}
-    <img
-      src={
-        author.avatar
-          ? `http://localhost:4000/${author.avatar}`
-          : `https://ui-avatars.com/api/?name=${encodeURIComponent(
-              author.name
-            )}&background=000000&color=ffffff`
-      }
-      className="w-28 h-28 rounded-full object-cover border"
-    />
+    {/* AUTHOR PROFILE CARD */}
+    <section className="bg-white border border-gray-200 rounded-xl p-6 sm:p-8">
+      <div className="flex flex-col sm:flex-row gap-6 sm:gap-8">
 
-    {/* MAIN INFO */}
-    <div className="flex-1 space-y-3">
-      <h1 className="text-4xl font-bold tracking-tight">
-        {author.name}
-      </h1>
-
-      <p className="text-gray-600 max-w-xl leading-relaxed">
-        {author.bio || "This author hasn’t written a bio yet."}
-      </p>
-
-      {/* STATS */}
-      <div className="flex gap-8 text-sm pt-2">
-        <div>
-          <span className="font-semibold text-gray-900">
-            {posts.length}
-          </span>{" "}
-          <span className="text-gray-500">Posts</span>
+        {/* AVATAR */}
+        <div className="flex-shrink-0">
+          <img
+            src={
+              author.avatar
+                ? `http://localhost:4000/${author.avatar}`
+                : `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                    author.name
+                  )}&background=000000&color=ffffff`
+            }
+            alt={author.name}
+            className="
+              w-24 h-24
+              sm:w-28 sm:h-28
+              rounded-full
+              object-cover
+              border
+            "
+          />
         </div>
-        <div>
-          <span className="font-semibold text-gray-900">
-            {followerCount}
-          </span>{" "}
-          <span className="text-gray-500">Followers</span>
+
+        {/* INFO */}
+        <div className="flex-1 space-y-4">
+          {/* NAME */}
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
+            {author.name}
+          </h1>
+
+          {/* BIO */}
+          <p className="text-gray-600 leading-relaxed max-w-2xl">
+            {author.bio || "This author hasn’t written a bio yet."}
+          </p>
+
+          {/* STATS */}
+          <div className="flex gap-6 text-sm text-gray-600">
+            <span>
+              <strong className="text-gray-900">{posts.length}</strong>{" "}
+              Posts
+            </span>
+            <span>
+              <strong className="text-gray-900">{followerCount}</strong>{" "}
+              Followers
+            </span>
+          </div>
+
+          {/* ACTION */}
+          <div className="pt-2">
+            {user && user._id === id ? (
+              <Link
+                to="/profile/edit"
+                className="
+                  inline-flex items-center
+                  px-5 py-2
+                  text-sm font-medium
+                  bg-black text-white
+                  rounded-lg
+                  hover:bg-black/90
+                  transition
+                "
+              >
+                Edit Profile
+              </Link>
+            ) : (
+              <button
+                onClick={toggleFollow}
+                className="
+                  inline-flex items-center
+                  px-6 py-2
+                  text-sm font-medium
+                  bg-black text-white
+                  rounded-lg
+                  hover:bg-black/90
+                  transition
+                "
+              >
+                {isFollowing ? "Unfollow" : "Follow"}
+              </button>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </section>
 
-    {/* ACTION */}
-    <div className="pt-2 sm:pt-0">
-      {user && user._id === id ? (
-        <Link
-  to="/profile/edit"
-  className="
-  bg-black text-white
-  px-5 py-3
-  rounded-lg
-  text-base font-medium
-  hover:bg-black/90
-  transition
-"
-
->
-  Edit Profile
-</Link>
-
-      ) : (
-       <button
-  onClick={toggleFollow}
-  className="bg-black text-white px-6 py-2 rounded-lg hover:bg-black/90 transition"
->
-  {isFollowing ? "Unfollow" : "Follow"}
-</button>
-
-      )}
-    </div>
+    {/* POSTS */}
+    <section className="space-y-6">
+      {posts.map((post) => (
+        <Post key={post._id} {...post} />
+      ))}
+    </section>
   </div>
-</div>
-
-
-
-      {/* POSTS */}
-      <div className="space-y-6">
-        {posts.map(post => (
-          <Post key={post._id} {...post} />
-        ))}
-      </div>
-    </div>
-  );
+); 
 };
 
 export default AuthorPage;

@@ -37,7 +37,6 @@ const EditPostPage = () => {
   const [files, setFiles] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // 🔹 Fetch existing post
   useEffect(() => {
     fetch("http://localhost:4000/post/" + id)
       .then((res) => {
@@ -51,7 +50,6 @@ const EditPostPage = () => {
         setLoading(false);
       })
       .catch(() => {
-        alert("You are not allowed to edit this post");
         navigate("/");
       });
   }, [id, navigate]);
@@ -79,75 +77,118 @@ const EditPostPage = () => {
 
     if (response.ok) {
       navigate("/post/" + id);
-    } else {
-      alert("Failed to update post");
     }
   };
 
   if (loading) return null;
 
   return (
-    <div className="max-w-4xl mx-auto px-6 py-10">
-      <h1 className="text-3xl font-bold mb-2">Edit Post</h1>
-      <p className="text-gray-500 mb-8">
-        Update your blog post content
-      </p>
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10">
+      
+      {/* PAGE HEADER */}
+      <div className="mb-8">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
+          Edit Post
+        </h1>
+        <p className="text-gray-500 mt-1">
+          Update your blog post content
+        </p>
+      </div>
 
+      {/* FORM */}
       <form
         onSubmit={updatePost}
-        className="space-y-6 bg-white border border-gray-200 rounded-xl p-8 shadow-sm"
+        className="
+          bg-white
+          border border-gray-200
+          rounded-xl
+          p-5 sm:p-8
+          space-y-6
+        "
       >
         {/* TITLE */}
-        <div>
-          <label className="block text-sm font-medium mb-1">Title</label>
+        <div className="space-y-1">
+          <label className="text-sm font-medium text-gray-700">
+            Title
+          </label>
           <input
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full border border-gray-300 rounded px-3 py-2"
+            className="
+              w-full
+              border border-gray-300
+              rounded-lg
+              px-4 py-2
+              focus:outline-none
+              focus:ring-2 focus:ring-black/20
+            "
             required
           />
         </div>
 
         {/* SUMMARY */}
-        <div>
-          <label className="block text-sm font-medium mb-1">Summary</label>
+        <div className="space-y-1">
+          <label className="text-sm font-medium text-gray-700">
+            Summary
+          </label>
           <input
             type="text"
             value={summary}
             onChange={(e) => setSummary(e.target.value)}
-            className="w-full border border-gray-300 rounded px-3 py-2"
+            className="
+              w-full
+              border border-gray-300
+              rounded-lg
+              px-4 py-2
+              focus:outline-none
+              focus:ring-2 focus:ring-black/20
+            "
             required
           />
         </div>
 
         {/* IMAGE */}
-        <div>
-          <label className="block text-sm font-medium mb-1">
+        <div className="space-y-1">
+          <label className="text-sm font-medium text-gray-700">
             Replace Cover Image (optional)
           </label>
           <input
             type="file"
             onChange={(e) => setFiles(e.target.files)}
+            className="text-sm text-gray-600"
           />
         </div>
 
         {/* CONTENT */}
-        <div>
-          <label className="block text-sm font-medium mb-2">Content</label>
-          <ReactQuill
-            value={content}
-            onChange={setContent}
-            modules={modules}
-            formats={formats}
-          />
+        <div className="space-y-2">
+          <label className="text-sm font-medium text-gray-700">
+            Content
+          </label>
+
+          <div className="border border-gray-300 rounded-lg overflow-hidden">
+            <ReactQuill
+              value={content}
+              onChange={setContent}
+              modules={modules}
+              formats={formats}
+              className="bg-white"
+            />
+          </div>
         </div>
 
         {/* ACTIONS */}
-        <div className="flex gap-4 pt-4">
+        <div className="flex flex-col sm:flex-row gap-3 pt-4">
           <button
             type="submit"
-            className="bg-black text-white px-6 py-2 rounded hover:opacity-90"
+            className="
+              bg-black text-white
+              px-6 py-2
+              rounded-lg
+              text-sm font-medium
+              hover:bg-black/90
+              transition
+            "
           >
             Update Post
           </button>
@@ -155,7 +196,14 @@ const EditPostPage = () => {
           <button
             type="button"
             onClick={() => navigate(-1)}
-            className="border border-gray-300 px-6 py-2 rounded"
+            className="
+              border border-gray-300
+              px-6 py-2
+              rounded-lg
+              text-sm
+              hover:bg-gray-100
+              transition
+            "
           >
             Cancel
           </button>

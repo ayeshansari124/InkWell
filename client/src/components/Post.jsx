@@ -1,25 +1,45 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Post = ({ title, summary, cover, author, createdAt, _id }) => {
+  const navigate = useNavigate();
+
   return (
-    <Link
-      to={`/post/${_id}`}
+    <article
+      onClick={() => navigate(`/post/${_id}`)}
       className="
-        block
+        group
+        cursor-pointer
         border-b border-gray-200
         transition-all duration-200 ease-out
         hover:-translate-y-[2px]
         hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)]
-        focus:outline-none
-        focus-visible:ring-2 focus-visible:ring-black
+        focus-within:ring-2 focus-within:ring-black
       "
     >
-      <article className="flex gap-6 py-6 w-full group">
-        
+      <div
+        className="
+          flex flex-col
+          sm:flex-row
+          gap-4 sm:gap-6
+          py-6
+          w-full
+        "
+      >
         {/* IMAGE */}
-        <div className="w-72 h-44 overflow-hidden rounded-md bg-gray-100 flex-shrink-0">
+        <div
+          className="
+            w-full
+            sm:w-72
+            h-48
+            sm:h-44
+            overflow-hidden
+            rounded-lg
+            bg-gray-100
+            flex-shrink-0
+          "
+        >
           <img
-            src={"http://localhost:4000/" + cover}
+            src={`http://localhost:4000/${cover}`}
             alt={title}
             className="
               w-full h-full object-cover
@@ -30,24 +50,25 @@ const Post = ({ title, summary, cover, author, createdAt, _id }) => {
         </div>
 
         {/* CONTENT */}
-        <div className="flex flex-col justify-between py-1 flex-1">
+        <div className="flex flex-col justify-between flex-1">
           <div className="space-y-2">
-
             {/* TITLE */}
-            <h2 className="text-xl font-bold leading-snug line-clamp-2">
+            <h2 className="text-lg sm:text-xl font-bold leading-snug line-clamp-2">
               {title}
             </h2>
 
             {/* META */}
-            <div className="text-sm text-gray-500">
-              <Link
-  to={`/author/${author?._id}`}
-  className="font-medium text-gray-700 hover:underline"
->
-  {author?.name}
-</Link>
-
-              {" · "}
+            <div className="text-sm text-gray-500 flex flex-wrap gap-1">
+              <span
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate(`/author/${author?._id}`);
+                }}
+                className="font-medium text-gray-700 hover:underline cursor-pointer"
+              >
+                {author?.name || "Unknown"}
+              </span>
+              <span>·</span>
               <time>{new Date(createdAt).toLocaleDateString()}</time>
             </div>
 
@@ -57,9 +78,8 @@ const Post = ({ title, summary, cover, author, createdAt, _id }) => {
             </p>
           </div>
         </div>
-
-      </article>
-    </Link>
+      </div>
+    </article>
   );
 };
 

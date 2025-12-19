@@ -11,8 +11,8 @@ const PostPage = () => {
 
   useEffect(() => {
     fetch("http://localhost:4000/post/" + id)
-      .then((response) => response.json())
-      .then((postInfo) => setPostInfo(postInfo));
+      .then((res) => res.json())
+      .then((post) => setPostInfo(post));
   }, [id]);
 
   const handleDelete = async () => {
@@ -28,77 +28,76 @@ const PostPage = () => {
 
     if (res.ok) {
       navigate("/");
-    } else {
-      alert("Failed to delete post");
     }
   };
 
   if (!postInfo) return null;
 
   return (
-    <article className="max-w-4xl mx-auto px-6 py-10">
+    <article className="max-w-3xl mx-auto px-4 sm:px-6 py-10">
 
       {/* HEADER */}
-      <div className="flex items-start justify-between gap-6 mb-6">
-        <div>
-          <h1 className="text-4xl font-bold leading-tight mb-3">
-            {postInfo.title}
-          </h1>
+      <header className="mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+          <div>
+            <h1 className="text-2xl sm:text-4xl font-bold leading-tight mb-3">
+              {postInfo.title}
+            </h1>
 
-          <div className="flex items-center gap-2 text-sm text-gray-500">
-           <Link
-  to={`/author/${postInfo.author?._id}`}
-  className="font-medium text-gray-700 hover:underline"
->
-  {postInfo.author?.name}
-</Link>
-
-            <span>·</span>
-            <time>
-              {new Date(postInfo.createdAt).toDateString()}
-            </time>
+            <div className="flex items-center gap-2 text-sm text-gray-500">
+              <Link
+                to={`/author/${postInfo.author?._id}`}
+                className="font-medium text-gray-700 hover:underline"
+              >
+                {postInfo.author?.name}
+              </Link>
+              <span>·</span>
+              <time>
+                {new Date(postInfo.createdAt).toDateString()}
+              </time>
+            </div>
           </div>
+
+          {/* ACTIONS */}
+          {user && user._id === postInfo.author?._id && (
+            <div className="flex gap-2">
+              <Link
+                to={`/edit/${postInfo._id}`}
+                title="Edit post"
+                className="p-2 rounded-lg hover:bg-gray-100 transition"
+              >
+                <Pencil size={18} />
+              </Link>
+
+              <button
+                onClick={handleDelete}
+                title="Delete post"
+                className="p-2 rounded-lg hover:bg-red-50 text-red-600 transition"
+              >
+                <Trash2 size={18} />
+              </button>
+            </div>
+          )}
         </div>
-
-        {/* ICON ACTIONS (AUTHOR ONLY) */}
-        {user && user._id === postInfo.author?._id && (
-          <div className="flex gap-2">
-            <Link
-              to={`/edit/${postInfo._id}`}
-              title="Edit post"
-              className="p-2 rounded-lg hover:bg-gray-100 transition"
-            >
-              <Pencil size={18} />
-            </Link>
-
-            <button
-              onClick={handleDelete}
-              title="Delete post"
-              className="p-2 rounded-lg hover:bg-red-50 text-red-600 transition"
-            >
-              <Trash2 size={18} />
-            </button>
-          </div>
-        )}
-      </div>
+      </header>
 
       {/* COVER IMAGE */}
-      <div className="mb-10">
+      <div className="mb-8">
         <img
           src={`http://localhost:4000/${postInfo.cover}`}
           alt={postInfo.title}
-          className="w-full max-h-[420px] object-cover rounded-2xl"
+          className="w-full max-h-[420px] object-cover rounded-xl"
         />
       </div>
 
       {/* SUMMARY */}
       <section className="mb-10">
-        <h2 className="text-sm font-semibold text-gray-500 uppercase mb-3">
+        <p className="text-sm uppercase tracking-wide text-gray-500 mb-2">
           Summary
-        </h2>
+        </p>
 
-        <div className="bg-gray-50 border-l-4 border-black p-5 rounded-lg">
-          <p className="text-lg font-medium text-gray-800 leading-relaxed">
+        <div className="bg-gray-50 border-l-4 border-black p-4 sm:p-5 rounded-lg">
+          <p className="text-base sm:text-lg font-medium text-gray-800 leading-relaxed">
             {postInfo.summary}
           </p>
         </div>
@@ -106,12 +105,12 @@ const PostPage = () => {
 
       {/* CONTENT */}
       <section>
-        <h2 className="text-sm font-semibold text-gray-500 uppercase mb-4">
+        <p className="text-sm uppercase tracking-wide text-gray-500 mb-4">
           Content
-        </h2>
+        </p>
 
         <div
-          className="prose prose-lg max-w-none"
+          className="prose prose-base sm:prose-lg max-w-none"
           dangerouslySetInnerHTML={{ __html: postInfo.content }}
         />
       </section>
