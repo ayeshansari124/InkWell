@@ -203,17 +203,32 @@ app.delete('/post/:id', requireAuth, async (req, res) => {
 
 app.get("/search", async (req, res) => {
   const { q } = req.query;
-
-  if (!q) {
-    return res.json([]);
-  }
+  if (!q) return res.json([]);
 
   const users = await User.find({
-    name: { $regex: q, $options: "i" }, // case-insensitive
-  }).select("name _id");
+    name: { $regex: q, $options: "i" },
+  }).select("name avatar bio followers");
 
-  res.json(users);
+  const results = await Promise.all(
+    users.map(async (user) => {
+      const postCount = await Post.countDocuments({
+        author: user._id,
+      });
+
+      return {
+        _id: user._id,
+        name: user.name,
+        avatar: user.avatar,
+        bio: user.bio,
+        postCount,
+        followerCount: user.followers.length,
+      };
+    })
+  );
+
+  res.json(results);
 });
+
 
 app.get("/author/:id/posts", async (req, res) => {
   const posts = await Post.find({ author: req.params.id })
