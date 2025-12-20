@@ -1,4 +1,5 @@
 import { createContext, useEffect, useState } from "react";
+import { getProfile } from "../services/auth.service";
 
 export const UserContext = createContext({});
 
@@ -7,18 +8,10 @@ export const UserContextProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:4000/profile", {
-      credentials: "include",
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setUser(data.user);
-        setLoading(false);
-      })
-      .catch(() => {
-        setUser(null);
-        setLoading(false);
-      });
+    getProfile()
+      .then((data) => setUser(data?.user || null))
+      .catch(() => setUser(null))
+      .finally(() => setLoading(false));
   }, []);
 
   return (

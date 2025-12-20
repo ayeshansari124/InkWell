@@ -1,6 +1,7 @@
 import { useContext, useState } from "react";
 import { UserContext } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
+import { updateProfile } from "../services/profile.service";
 
 const EditProfilePage = () => {
   const { user, setUser } = useContext(UserContext);
@@ -11,30 +12,18 @@ const EditProfilePage = () => {
 
   if (!user) return null;
 
-  const updateProfile = async (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
 
-    const data = new FormData();
-    data.append("bio", bio);
-    if (avatar) data.append("avatar", avatar);
+    const updated = await updateProfile({ bio, avatar });
+    if (!updated) return;
 
-    const res = await fetch("http://localhost:4000/profile", {
-      method: "PUT",
-      body: data,
-      credentials: "include",
-    });
-
-    if (res.ok) {
-      const updated = await res.json();
-      setUser(updated.user);
-      navigate(`/author/${user._id}`);
-    }
+    setUser(updated.user);
+    navigate(`/author/${user._id}`);
   };
 
   return (
     <div className="max-w-xl mx-auto px-4 sm:px-6 py-10">
-      
-      {/* PAGE HEADER */}
       <div className="mb-8">
         <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
           Edit Profile
@@ -44,18 +33,10 @@ const EditProfilePage = () => {
         </p>
       </div>
 
-      {/* FORM */}
       <form
-        onSubmit={updateProfile}
-        className="
-          bg-white
-          border border-gray-200
-          rounded-xl
-          p-5 sm:p-6
-          space-y-6
-        "
+        onSubmit={onSubmit}
+        className="bg-white border border-gray-200 rounded-xl p-5 sm:p-6 space-y-6"
       >
-        {/* AVATAR */}
         <div className="space-y-3">
           <label className="text-sm font-medium text-gray-700">
             Profile Picture
@@ -71,12 +52,7 @@ const EditProfilePage = () => {
                     )}&background=000000&color=ffffff`
               }
               alt={user.name}
-              className="
-                w-20 h-20
-                rounded-full
-                object-cover
-                border
-              "
+              className="w-20 h-20 rounded-full object-cover border"
             />
 
             <input
@@ -87,7 +63,6 @@ const EditProfilePage = () => {
           </div>
         </div>
 
-        {/* BIO */}
         <div className="space-y-2">
           <label className="text-sm font-medium text-gray-700">
             Bio
@@ -97,32 +72,14 @@ const EditProfilePage = () => {
             value={bio}
             onChange={(e) => setBio(e.target.value)}
             rows={4}
-            placeholder="Tell something about yourself"
-            className="
-              w-full
-              border border-gray-300
-              rounded-lg
-              px-4 py-2
-              resize-none
-              focus:outline-none
-              focus:ring-2 focus:ring-black/20
-            "
+            className="w-full border border-gray-300 rounded-lg px-4 py-2 resize-none focus:ring-2 focus:ring-black/20"
           />
         </div>
 
-        {/* ACTION */}
         <div className="pt-4">
           <button
             type="submit"
-            className="
-              inline-flex items-center justify-center
-              bg-black text-white
-              px-6 py-2
-              rounded-lg
-              text-sm font-medium
-              hover:bg-black/90
-              transition
-            "
+            className="bg-black text-white px-6 py-2 rounded-lg text-sm font-medium hover:bg-black/90"
           >
             Save Changes
           </button>

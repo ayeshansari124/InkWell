@@ -1,34 +1,25 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Home, Plus, Search } from "lucide-react";
 
+import { UserContext } from "../context/UserContext";
+import { logoutUser } from "../services/auth.service";
+import { searchAuthors } from "../services/author.service";
+
 const Header = () => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { user, loading, setUser } = useContext(UserContext);
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    fetch("http://localhost:4000/profile", {
-      credentials: "include",
-    })
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data) => setUser(data?.user || null))
-      .finally(() => setLoading(false));
-  }, []);
-
-  const logout = async () => {
-    await fetch("http://localhost:4000/logout", {
-      method: "POST",
-      credentials: "include",
-    });
+  const handleLogout = async () => {
+    await logoutUser();
     setUser(null);
     navigate("/");
   };
 
-  const handleInput = (e) => {
+  const handleInput = async (e) => {
     const value = e.target.value;
     setQuery(value);
 
@@ -37,9 +28,8 @@ const Header = () => {
       return;
     }
 
-    fetch(`http://localhost:4000/search?q=${value}`)
-      .then((res) => res.json())
-      .then((data) => setResults(data));
+    const data = await searchAuthors(value);
+    setResults(data);
   };
 
   if (loading) return null;
@@ -48,37 +38,22 @@ const Header = () => {
     <header className="sticky top-0 z-50 bg-white border-b border-gray-200">
       <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
 
-        {/* LEFT — HOME */}
-        <div className="flex items-center gap-2">
-          <Link
-            to="/"
-            className="p-2 rounded-lg hover:bg-gray-100 transition"
-          >
-            <Home size={20} />
-          </Link>
-        </div>
+        {/* LEFT */}
+        <Link to="/" className="p-2 rounded-lg hover:bg-gray-100">
+          <Home size={20} />
+        </Link>
 
-        {/* CENTER — SEARCH */}
+        {/* CENTER */}
         <div className="relative flex-1 mx-2 sm:mx-6">
           <form
             onSubmit={(e) => {
               e.preventDefault();
               if (query.trim()) navigate(`/search?q=${query}`);
             }}
-            className="
-              flex items-center gap-2
-              bg-gray-100
-              rounded-lg
-              px-3 py-2
-              focus-within:bg-white
-              focus-within:ring-1
-              focus-within:ring-black/20
-              transition
-            "
+            className="flex items-center gap-2 bg-gray-100 rounded-lg px-3 py-2 focus-within:ring-1 focus-within:ring-black/20"
           >
             <Search size={16} className="text-gray-500" />
             <input
-              type="text"
               value={query}
               onChange={handleInput}
               placeholder="Search authors"
@@ -87,7 +62,7 @@ const Header = () => {
           </form>
 
           {results.length > 0 && (
-            <div className="absolute top-12 left-0 w-full bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
+            <div className="absolute top-12 w-full bg-white border rounded-lg shadow-lg">
               {results.map((author) => (
                 <Link
                   key={author._id}
@@ -102,57 +77,39 @@ const Header = () => {
           )}
         </div>
 
-        {/* RIGHT — ACTIONS */}
+        {/* RIGHT */}
         <div className="flex items-center gap-2">
-
           {!user ? (
             <>
-              <Link
-                to="/login"
-                className="px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-100"
-              >
+              <Link to="/login" className="px-3 py-1.5 border rounded-lg text-sm">
                 Login
               </Link>
-
-              <Link
-                to="/register"
-                className="px-3 py-1.5 text-sm bg-black text-white rounded-lg hover:bg-black/90"
-              >
+              <Link to="/register" className="px-3 py-1.5 bg-black text-white rounded-lg text-sm">
                 Register
               </Link>
             </>
           ) : (
             <>
-              {/* CREATE — DESKTOP ONLY */}
-              <Link
-                to="/create"
-                className="hidden sm:inline-flex p-2 rounded-lg hover:bg-gray-100"
-                title="Create Post"
-              >
+              <Link to="/create" className="hidden sm:inline-flex p-2 hover:bg-gray-100 rounded-lg">
                 <Plus size={20} />
               </Link>
 
-              {/* LOGOUT — ALWAYS VISIBLE (MOBILE + DESKTOP) */}
               <button
-                onClick={logout}
-                className="px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-100"
+                onClick={handleLogout}
+                className="px-3 py-1.5 border rounded-lg text-sm"
               >
                 Logout
               </button>
 
-              {/* PROFILE ICON */}
               <Link
                 to={`/author/${user._id}`}
-                className="w-9 h-9 rounded-full overflow-hidden border hover:ring-2 hover:ring-black transition"
-                title="My Profile"
+                className="w-9 h-9 rounded-full overflow-hidden border"
               >
                 <img
                   src={
                     user.avatar
                       ? `http://localhost:4000/${user.avatar}`
-                      : `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                          user.name
-                        )}&background=000000&color=ffffff`
+                      : `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}`
                   }
                   alt={user.name}
                   className="w-full h-full object-cover"
@@ -160,7 +117,6 @@ const Header = () => {
               </Link>
             </>
           )}
-
         </div>
       </div>
     </header>

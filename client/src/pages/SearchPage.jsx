@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
+import { searchAuthors } from "../services/author.service";
 
 const SearchPage = () => {
   const [params] = useSearchParams();
@@ -8,15 +9,11 @@ const SearchPage = () => {
 
   useEffect(() => {
     if (!query) return;
-
-    fetch(`http://localhost:4000/search?q=${query}`)
-      .then((res) => res.json())
-      .then((data) => setAuthors(data));
+    searchAuthors(query).then(setAuthors);
   }, [query]);
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
-      
       {/* HEADER */}
       <div className="mb-8">
         <h1 className="text-2xl sm:text-3xl font-bold mb-1">
@@ -52,7 +49,6 @@ const SearchPage = () => {
               "
             >
               <div className="flex gap-4 items-start">
-                
                 {/* AVATAR */}
                 <img
                   src={
@@ -77,15 +73,10 @@ const SearchPage = () => {
                   </p>
 
                   <div className="flex gap-4 text-xs text-gray-500 mt-2">
-                    <span>
-                      {author.postCount ?? 0} posts
-                    </span>
-                    <span>
-                      {author.followerCount ?? 0} followers
-                    </span>
+                    <span>{author.postCount ?? 0} posts</span>
+                    <span>{author.followerCount ?? 0} followers</span>
                   </div>
                 </div>
-
               </div>
             </Link>
           </li>
