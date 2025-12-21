@@ -10,7 +10,7 @@ const Post = ({ title, summary, cover, author, createdAt, _id }) => {
     >
       <div className="flex flex-col sm:flex-row gap-6">
         <img
-          src={`http://localhost:4000/${cover}`}
+          src={`${process.env.VITE_API_URL}/${cover}`}
           alt={title}
           className="w-full sm:w-72 h-48 object-cover rounded-lg"
         />

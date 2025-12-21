@@ -47,7 +47,7 @@ const AuthorPage = () => {
             <img
               src={
                 author.avatar
-                  ? `http://localhost:4000/${author.avatar}`
+                  ? `${process.env.VITE_API_URL}/${author.avatar}`
                   : `https://ui-avatars.com/api/?name=${encodeURIComponent(
                       author.name
                     )}&background=000000&color=ffffff`

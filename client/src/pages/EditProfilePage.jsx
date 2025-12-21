@@ -46,7 +46,7 @@ const EditProfilePage = () => {
             <img
               src={
                 user.avatar
-                  ? `http://localhost:4000/${user.avatar}`
+                  ? `${process.env.VITE_API_URL}/${user.avatar}`
                   : `https://ui-avatars.com/api/?name=${encodeURIComponent(
                       user.name
                     )}&background=000000&color=ffffff`

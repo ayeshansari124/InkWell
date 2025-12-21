@@ -56,7 +56,7 @@ const PostPage = () => {
       </header>
 
       <img
-        src={`http://localhost:4000/${postInfo.cover}`}
+        src={`${process.env.VITE_API_URL}/${postInfo.cover}`}
         alt={postInfo.title}
         className="w-full max-h-[420px] object-cover rounded-xl mb-8"
       />
