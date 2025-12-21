@@ -108,7 +108,7 @@ const Header = () => {
                 <img
                   src={
                     user.avatar
-                      ? `${process.env.VITE_API_URL}/${user.avatar}`
+                      ? `${import.meta.env.VITE_API_URL}/${user.avatar}`
                       : `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}`
                   }
                   alt={user.name}

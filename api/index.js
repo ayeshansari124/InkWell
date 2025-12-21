@@ -16,10 +16,13 @@ app.use("/uploads", express.static("uploads"));
 app.use(cookieParser());
 app.use(express.json());
 
-app.use(cors({
-  origin: "https://ink-well-xi.vercel.app/",
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: "https://ink-well-xi.vercel.app/",
+    credentials: true,
+  })
+);
+
 
 
 

@@ -53,7 +53,7 @@ const SearchPage = () => {
                 <img
                   src={
                     author.avatar
-                      ? `${process.env.VITE_API_URL}/${author.avatar}`
+                      ? `${import.meta.env.VITE_API_URL}/${author.avatar}`
                       : `https://ui-avatars.com/api/?name=${encodeURIComponent(
                           author.name
                         )}&background=000000&color=ffffff`
