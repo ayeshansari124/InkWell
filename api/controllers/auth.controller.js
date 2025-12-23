@@ -42,7 +42,7 @@ exports.login = async (req, res) => {
     return res.status(400).json({ error: "Invalid credentials" });
 
   const token = createToken(user._id);
-  res.cookie("token", token, {
+ res.cookie("token", token, {
   httpOnly: true,
   sameSite: "none",
   secure: true,
@@ -53,11 +53,11 @@ exports.login = async (req, res) => {
 };
 
 exports.logout = (req, res) => {
-  res.cookie("token", "", {
-    httpOnly: true,
-    expires: new Date(0),
-    sameSite: "none",
-    secure: true,
-  });
+ res.cookie("token", "", {
+  httpOnly: true,
+  sameSite: "none",
+  secure: true,
+  expires: new Date(0),
+});
   res.json({ message: "Logged out" });
 };

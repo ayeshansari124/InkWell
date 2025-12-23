@@ -18,13 +18,10 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: "https://ink-well-xi.vercel.app/",
+    origin: "https://ink-well-xi.vercel.app",
     credentials: true,
   })
 );
-
-
-
 
 app.use(authRoutes);
 app.use(postRoutes);
