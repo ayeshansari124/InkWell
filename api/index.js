@@ -12,16 +12,17 @@ const app = express();
 
 connectDB();
 
-app.use("/uploads", express.static("uploads"));
-app.use(cookieParser());
-app.use(express.json());
-
 app.use(
   cors({
     origin: "https://ink-well-xi.vercel.app",
     credentials: true,
-  })
+  }),
 );
+
+app.use(express.json());
+app.use(cookieParser());
+
+app.use("/uploads", express.static("uploads"));
 
 app.use(authRoutes);
 app.use(postRoutes);
