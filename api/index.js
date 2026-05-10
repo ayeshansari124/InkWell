@@ -12,9 +12,21 @@ const app = express();
 
 connectDB();
 
+//CORS
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://ink-well-xi.vercel.app",
+];
+
 app.use(
   cors({
-    origin: "https://ink-well-xi.vercel.app",
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   }),
 );

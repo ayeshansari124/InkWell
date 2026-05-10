@@ -33,11 +33,10 @@ const Header = () => {
   };
 
   if (loading) return null;
-
+  console.log(user);
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-gray-200">
       <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
-
         {/* LEFT */}
         <Link to="/" className="p-2 rounded-lg hover:bg-gray-100">
           <Home size={20} />
@@ -81,16 +80,25 @@ const Header = () => {
         <div className="flex items-center gap-2">
           {!user ? (
             <>
-              <Link to="/login" className="px-3 py-1.5 border rounded-lg text-sm">
+              <Link
+                to="/login"
+                className="px-3 py-1.5 border rounded-lg text-sm"
+              >
                 Login
               </Link>
-              <Link to="/register" className="px-3 py-1.5 bg-black text-white rounded-lg text-sm">
+              <Link
+                to="/register"
+                className="px-3 py-1.5 bg-black text-white rounded-lg text-sm"
+              >
                 Register
               </Link>
             </>
           ) : (
             <>
-              <Link to="/create" className="hidden sm:inline-flex p-2 hover:bg-gray-100 rounded-lg">
+              <Link
+                to="/create"
+                className="hidden sm:inline-flex p-2 hover:bg-gray-100 rounded-lg"
+              >
                 <Plus size={20} />
               </Link>
 
@@ -101,20 +109,22 @@ const Header = () => {
                 Logout
               </button>
 
-              <Link
-                to={`/author/${user._id}`}
-                className="w-9 h-9 rounded-full overflow-hidden border"
-              >
-                <img
-                  src={
-                    user.avatar
-                      ? `${import.meta.env.VITE_API_URL}/${user.avatar}`
-                      : `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}`
-                  }
-                  alt={user.name}
-                  className="w-full h-full object-cover"
-                />
-              </Link>
+              {user?._id && (
+                <Link
+                  to={`/author/${user._id}`}
+                  className="w-9 h-9 rounded-full overflow-hidden border"
+                >
+                  <img
+                    src={
+                      user?.avatar
+                        ? `${import.meta.env.VITE_API_URL}/${user.avatar}`
+                        : `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}`
+                    }
+                    alt={user?.name}
+                    className="w-full h-full object-cover"
+                  />
+                </Link>
+              )}
             </>
           )}
         </div>
