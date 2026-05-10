@@ -1,68 +1,53 @@
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
+
 import { searchAuthors } from "../services/author.service";
 
 const SearchPage = () => {
   const [params] = useSearchParams();
+
   const query = params.get("q");
+
   const [authors, setAuthors] = useState([]);
 
   useEffect(() => {
     if (!query) return;
+
     searchAuthors(query).then(setAuthors);
   }, [query]);
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
-      {/* HEADER */}
       <div className="mb-8">
-        <h1 className="text-2xl sm:text-3xl font-bold mb-1">
-          Search results
-        </h1>
-        <p className="text-gray-500">
-          Authors matching “{query}”
-        </p>
+        <h1 className="text-2xl sm:text-3xl font-bold mb-1">Search results</h1>
+
+        <p className="text-gray-500">Authors matching “{query}”</p>
       </div>
 
-      {/* EMPTY STATE */}
       {authors.length === 0 && (
-        <p className="text-gray-500">
-          No authors found.
-        </p>
+        <p className="text-gray-500">No authors found.</p>
       )}
 
-      {/* RESULTS */}
       <ul className="grid gap-4 sm:grid-cols-2">
         {authors.map((author) => (
           <li key={author._id}>
             <Link
               to={`/author/${author._id}`}
-              className="
-                group block
-                border border-gray-200
-                rounded-xl
-                p-5
-                bg-white
-                transition-all duration-200
-                hover:-translate-y-[2px]
-                hover:shadow-md
-              "
+              className="group block border border-gray-200 rounded-xl p-5 bg-white transition-all duration-200 hover:-translate-y-[2px] hover:shadow-md"
             >
               <div className="flex gap-4 items-start">
-                {/* AVATAR */}
                 <img
                   src={
                     author.avatar
                       ? `${import.meta.env.VITE_API_URL}/${author.avatar}`
                       : `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                          author.name
+                          author.name,
                         )}&background=000000&color=ffffff`
                   }
                   alt={author.name}
-                  className="w-14 h-14 rounded-full object-cover flex-shrink-0"
+                  className="w-14 h-14 rounded-full object-cover shrink-0"
                 />
 
-                {/* INFO */}
                 <div className="flex-1">
                   <h2 className="text-lg font-semibold group-hover:underline">
                     {author.name}
@@ -74,6 +59,7 @@ const SearchPage = () => {
 
                   <div className="flex gap-4 text-xs text-gray-500 mt-2">
                     <span>{author.postCount ?? 0} posts</span>
+
                     <span>{author.followerCount ?? 0} followers</span>
                   </div>
                 </div>

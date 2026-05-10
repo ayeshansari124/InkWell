@@ -47,7 +47,7 @@ exports.searchUsers = async (req, res) => {
 
 exports.getAuthor = async (req, res) => {
   const user = await User.findById(req.params.id).select(
-    "name avatar bio followers"
+    "name avatar bio followers createdAt"
   );
 
   res.json({
