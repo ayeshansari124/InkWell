@@ -63,7 +63,7 @@ const AuthorPage = () => {
               <img
                 src={
                   author.avatar
-                    ? `{author.avatar}`
+                    ? author.avatar
                     : `https://ui-avatars.com/api/?name=${encodeURIComponent(author.name)}&background=000000&color=ffffff`
                 }
                 alt={author.name}

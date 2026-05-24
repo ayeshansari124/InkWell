@@ -62,11 +62,13 @@ const EditProfilePage = () => {
               <div className="relative w-fit">
                 <img
                   src={
-                    user.avatar
-                      ? `{user.avatar}`
-                      : `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                          user.name,
-                        )}&background=000000&color=ffffff`
+                    avatar
+                      ? URL.createObjectURL(avatar)
+                      : user.avatar
+                        ? user.avatar
+                        : `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                            user.name,
+                          )}&background=000000&color=ffffff`
                   }
                   alt={user.name}
                   className="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl object-cover border border-gray-200 shadow-sm"
@@ -77,6 +79,7 @@ const EditProfilePage = () => {
 
                   <input
                     type="file"
+                    accept="image/*"
                     onChange={(e) => setAvatar(e.target.files[0])}
                     className="hidden"
                   />
