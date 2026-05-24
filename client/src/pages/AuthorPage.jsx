@@ -63,7 +63,7 @@ const AuthorPage = () => {
               <img
                 src={
                   author.avatar
-                    ? `${import.meta.env.VITE_API_URL}/${author.avatar}`
+                    ? `{author.avatar}`
                     : `https://ui-avatars.com/api/?name=${encodeURIComponent(author.name)}&background=000000&color=ffffff`
                 }
                 alt={author.name}
@@ -105,7 +105,7 @@ const AuthorPage = () => {
               </div>
 
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-7">
-                <div className="flex items-center gap-3 bg-gray-100 rounded-2xl px-4 py-4">
+                <div className="flex items-center gap-3 rounded-2xl px-4 py-4">
                   <div className="w-11 h-11 rounded-xl bg-white flex items-center justify-center shrink-0">
                     <FileText size={18} />
                   </div>
@@ -119,7 +119,7 @@ const AuthorPage = () => {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3 bg-gray-100 rounded-2xl px-4 py-4">
+                <div className="flex items-center gap-3 rounded-2xl px-4 py-4">
                   <div className="w-11 h-11 rounded-xl bg-white flex items-center justify-center shrink-0">
                     <Users size={18} />
                   </div>
@@ -133,7 +133,7 @@ const AuthorPage = () => {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3 bg-gray-100 rounded-2xl px-4 py-4 col-span-2 md:col-span-1">
+                <div className="flex items-center gap-3 rounded-2xl px-4 py-4 col-span-2 md:col-span-1">
                   <div className="w-11 h-11 rounded-xl bg-white flex items-center justify-center shrink-0">
                     <CalendarDays size={18} />
                   </div>

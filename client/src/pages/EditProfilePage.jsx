@@ -1,11 +1,7 @@
 import { useContext, useState } from "react";
-
 import { UserContext } from "../context/UserContext";
-
 import { useNavigate } from "react-router-dom";
-
 import { Camera, FileText, ArrowLeft } from "lucide-react";
-
 import { updateProfile } from "../services/profile.service";
 
 const EditProfilePage = () => {
@@ -67,7 +63,7 @@ const EditProfilePage = () => {
                 <img
                   src={
                     user.avatar
-                      ? `${import.meta.env.VITE_API_URL}/${user.avatar}`
+                      ? `{user.avatar}`
                       : `https://ui-avatars.com/api/?name=${encodeURIComponent(
                           user.name,
                         )}&background=000000&color=ffffff`

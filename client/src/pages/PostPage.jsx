@@ -1,11 +1,7 @@
 import { useEffect, useState, useContext } from "react";
-
 import { useParams, Link, useNavigate } from "react-router-dom";
-
 import { Pencil, Trash2, CalendarDays, AlertTriangle, X } from "lucide-react";
-
 import { UserContext } from "../context/UserContext";
-
 import { getPostById, deletePost } from "../services/post.service";
 
 const PostPage = () => {
@@ -87,7 +83,7 @@ const PostPage = () => {
 
         <div className="mb-8 overflow-hidden rounded-3xl border border-gray-200 shadow-sm">
           <img
-            src={`${import.meta.env.VITE_API_URL}/${postInfo.cover}`}
+            src={postInfo.cover}
             alt={postInfo.title}
             className="w-full h-[240px] sm:h-[380px] object-cover"
           />
