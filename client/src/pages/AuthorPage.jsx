@@ -75,7 +75,7 @@ const AuthorPage = () => {
               <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-5">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-3 flex-wrap">
-                    <h1 className="text-3xl sm:text-4xl font-white tracking-tight text-gray-900 sm:text-white">
+                    <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-black lg:text-white">
                       {author.name}
                     </h1>
 
@@ -89,7 +89,7 @@ const AuthorPage = () => {
                     )}
                   </div>
 
-                  <p className="mt-3 text-gray-600 leading-relaxed">
+                  <p className="mt-3 text-gray-800 leading-relaxed font-semibold">
                     {author.bio || "This author hasn’t written a bio yet."}
                   </p>
                 </div>
