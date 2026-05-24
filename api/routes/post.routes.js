@@ -9,7 +9,11 @@ const {
   deletePost,
 } = require("../controllers/post.controller");
 
-const upload = multer({ dest: "uploads/" });
+const storage = multer.memoryStorage();
+const upload = multer({
+  storage
+});
+
 const router = express.Router();
 
 router.post("/post", upload.single("file"), createPost);

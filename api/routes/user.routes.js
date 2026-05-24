@@ -10,7 +10,10 @@ const {
   toggleFollow,
 } = require("../controllers/user.controller");
 
-const upload = multer({ dest: "uploads/" });
+const storage = multer.memoryStorage();
+const upload = multer({
+  storage
+});
 const router = express.Router();
 
 router.get("/profile", requireAuth, getProfile);

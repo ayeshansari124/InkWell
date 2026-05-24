@@ -1,30 +1,42 @@
 const User = require("../models/User");
 const Post = require("../models/Post");
-const fs = require("fs");
+
+const uploadToCloudinary = require("../utils/uploadToCloudinary");
 
 exports.getProfile = async (req, res) => {
   const user = await User.findById(req.userId).select("-password");
+
   res.json({ user });
 };
 
 exports.updateProfile = async (req, res) => {
-  const user = await User.findById(req.userId);
+  try {
+    const user = await User.findById(req.userId);
 
-  if (req.body.bio !== undefined) user.bio = req.body.bio;
+    if (req.body.bio !== undefined) {
+      user.bio = req.body.bio;
+    }
 
-  if (req.file) {
-    const ext = req.file.originalname.split(".").pop();
-    const newPath = req.file.path + "." + ext;
-    fs.renameSync(req.file.path, newPath);
-    user.avatar = newPath;
+    if (req.file) {
+      const result = await uploadToCloudinary(req.file, "inkwell_avatars");
+      user.avatar = result.secure_url;
+    }
+
+    await user.save();
+
+    res.json({ user });
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      error: "Failed to update profile",
+    });
   }
-
-  await user.save();
-  res.json({ user });
 };
 
 exports.searchUsers = async (req, res) => {
   const q = req.query.q;
+
   if (!q) return res.json([]);
 
   const users = await User.find({
@@ -39,7 +51,7 @@ exports.searchUsers = async (req, res) => {
       bio: u.bio,
       postCount: await Post.countDocuments({ author: u._id }),
       followerCount: u.followers.length,
-    }))
+    })),
   );
 
   res.json(results);
@@ -47,7 +59,7 @@ exports.searchUsers = async (req, res) => {
 
 exports.getAuthor = async (req, res) => {
   const user = await User.findById(req.params.id).select(
-    "name avatar bio followers createdAt"
+    "name avatar bio followers createdAt",
   );
 
   res.json({
