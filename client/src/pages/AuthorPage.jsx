@@ -72,10 +72,10 @@ const AuthorPage = () => {
             </div>
 
             <div className="flex-1 pt-2">
-              <div className="flex items-start justify-between gap-4">
-                <div className="max-w-3xl">
+              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-5">
+                <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-3 flex-wrap">
-                    <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-gray-900">
+                    <h1 className="text-3xl sm:text-4xl font-white tracking-tight text-gray-900 sm:text-white">
                       {author.name}
                     </h1>
 
