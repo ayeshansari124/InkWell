@@ -8,7 +8,7 @@ https://ink-well-xi.vercel.app/
 
 ---
 
-## ✨ User Features
+## ✨ Features
 
 - User signup, login, and logout
 - Public article reading
@@ -50,8 +50,6 @@ https://ink-well-xi.vercel.app/
 ---
 
 ## 📸 Screenshots
-
-# 👤 User Side
 
 ### 🏠 Homepage
 ![Homepage](./screenshots/homepage.png)
