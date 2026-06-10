@@ -53,7 +53,7 @@ https://ink-well-xi.vercel.app/
 
 Watch the complete application walkthrough below.
 
-[![Watch Demo](./demo-thumbnail.png)](https://ayeshansari124.github.io/Inkwell/demo.html)
+[![Watch Demo](./demo-thumbnail.png)](https://ayeshansari124.github.io/InkWell/demo.html)
 
 ---
 
