@@ -49,60 +49,11 @@ https://ink-well-xi.vercel.app/
 
 ---
 
-## 📸 Screenshots
+## 🎥 Project Demo
 
-### 🏠 Homepage
-![Homepage](./screenshots/homepage.png)
+Watch the complete application walkthrough below.
 
----
-
-### 🔐 Authentication
-![Authentication](./screenshots/login-page.png)
-
----
-
-### 📝 Create Article
-![Create Post](./screenshots/create-post.png)
-
----
-
-### ✍️ Rich Text Editor
-![Editor](./screenshots/editor.png)
-
----
-
-### 📖 Single Article View
-![Single Post](./screenshots/single-post.png)
-
----
-
-### 👤 Personal Profile
-![Own Profile](./screenshots/own-profile.png)
-
----
-
-### ⚙️ Edit Profile
-![Edit Profile](./screenshots/edit-profile.png)
-
----
-
-### ✏️ Edit Articles
-![Edit Post](./screenshots/edit-post.png)
-
----
-
-### 📰 Articles Feed
-![Articles Feed](./screenshots/articles-feed.png)
-
----
-
-### 🌍 Public Author Profiles
-![Public Profile](./screenshots/public-profile.png)
-
----
-
-### 🔍 Author Search
-![Search Authors](./screenshots/search-authors.png)
+[![Watch Demo](./demo-thumbnail.png)](https://ayeshansari124.github.io/Inkwell/demo.html)
 
 ---
 
